@@ -19,6 +19,8 @@
     "express": "^4.13.4",
     "jade": "^1.11.0",
     "morgan": "^1.6.1",
-    "serve-favicon": "^2.3.0"
+    "serve-favicon": "^2.3.0",
+    "gcloud": "~0.36.0",
+    "googleapis": "~11.0.0"
   }
 }
