@@ -69,7 +69,7 @@ app.use(function (err, req, res) {
 });
 
 app.listen(process.env.PORT, '0.0.0.0', function () {
-      console.log('Example app listening on port 3000!');
+      console.log('Example app listening on port '+process.env.PORT+'!');
 });
 
 module.exports = app;
