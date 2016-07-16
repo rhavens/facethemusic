@@ -68,7 +68,7 @@ app.use(function (err, req, res) {
   });
 });
 
-app.listen(3000, '0.0.0.0', function () {
+app.listen(process.env.PORT, '0.0.0.0', function () {
       console.log('Example app listening on port 3000!');
 });
 
