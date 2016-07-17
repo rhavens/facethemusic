@@ -63,6 +63,7 @@
     z-index: 1;
     margin-top: 20px;
     height: 783px;
+    text-align: center;
 }
 
 audio {
@@ -78,4 +79,12 @@ audio {
     transform: none !important;
     top: -110px !important;
     position: relative !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#toggle-stats {
+    pointer-events: all;
 }

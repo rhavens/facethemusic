@@ -22,9 +22,10 @@ function initEventListeners(){
                 Globals.Data = d3.selectAll('rect').data();
             }
         }
+        else if (e.keyCode == 73) {
+            toggleStats();
+        }
     });
-
-
 };
 
 
@@ -46,6 +47,11 @@ function loadAlbums() {
 // todo
 function scrollThingsIntoView() {
 
+}
+
+function toggleStats() {
+    $('#stats').toggleClass('hidden');
+    $('#container').toggleClass('hidden');
 }
 
 function initWebcam() {

@@ -39,7 +39,7 @@
 </head>
 s
 <body style='overflow:hidden;margin:0;'>
-  <div id='container'>
+  <div id='container' class='hidden'>
     <video id='videoe1' width='200' height='150'></video>
     <canvas id='overlay' width='200' height='150'></canvas>
     <canvas id='sketch'></canvas>
@@ -55,9 +55,10 @@ s
     <div id='live-webcam' class='col-lg-7 webcam-container'>
     </div>
     <div class='col-lg-5 col-lg-push-7 spotify-container'>
-      <div id='music-display' class='row'></div>
+      <h2 class='page-title' style='font-size:48px;'>Press spacebar to begin</h2>
+      <div id='music-display'></div>
       <div id="results"></div>
-      <div id='stats'>
+      <div id='stats' class='hidden'>
         <div id='emotion_chart'></div>
       </div>
     </div>
