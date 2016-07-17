@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>FaceMusic</title>
+    <title>face.the.music</title>
     <meta charset=utf-8 />
     <!-- icon -->
     <link rel='shortcut icon' href='favicon.ico' />
@@ -18,13 +18,19 @@
     <script type="text/javascript" src="/js/webcam.js"></script>
     <script src='js/shared.js'></script>
     <script src='js/webcam.js'></script>
+    <script src='js/clmtrackr.js'></script>
+    <script src='js/model_pca_20_svm.js'></script>
+    <script src='//d3js.org/d3.v3.min.js'></script>
+    <script src='js/Stats.js'></script>
+    <script src='js/emotion_classifier.js'></script>
+    <script src='js/emotionmodel.js'></script>
     <script src='js/index.js'></script>
     <!-- d3js -->
     <script src='//d3js.org/d3.v3.min.js'></script>
     <!-- Bootstrap CSS -->
     <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css' />
     <!-- Bootstrap JS -->
-    <script src='//maxcdn.bootstrapcdn.com/boosststrap/3.3.6/js/bootstrap.min.js'></script>
+    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
     <!-- Local CSS -->
     <link rel='stylesheet' href='css/shared.css' />
     <link rel='stylesheet' href='css/index.css' />
@@ -41,6 +47,7 @@
     <div id='live-webcam' class='col-lg-7 webcam-container'>
       <div class='webcam-inner'>
         <div id="my_camera"></div>
+        <canvas id="canvas"  width="930" height="930"></canvas>
       </div>
     </div>
     <div class='col-lg-5 col-lg-push-7 spotify-container'>
@@ -71,4 +78,3 @@
   </div>
 </body>
 </html>
-
