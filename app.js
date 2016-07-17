@@ -293,7 +293,7 @@ app.post('/get_vision_info', function(req, res) {
         res.send({'error':'error writing image'});
       }
       else {
-        vision.detectFaces('output.jpg', function(err, faces, apiResponse, other) {
+        vision.detectFaces('output.jpg', function(err, faces, apiResponse) {
           var err_p = err || apiResponse.responses[0].error || null;
           if (err_p) {
             console.log('error in google');

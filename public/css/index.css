@@ -53,23 +53,21 @@
 
 
 .spotify-container {
-    background-color: white;
-    position: absolute;
+    background-color: rgba(0,0,0,0.5);
     z-index: 1;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 70%;
-    width: auto;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    border-radius: 15px;
-    margin-right: 20px;
+    margin-top: 24px;
+    height: 806px;
 }
 
 .live-video {
     position: relative;
     top: -110px;
+}
+
+.spotify-container #results img{
+    opacity: .99;
+    border: 2px solid black;
+    z-index: 2;
 }
 
 

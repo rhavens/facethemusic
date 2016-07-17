@@ -11,13 +11,15 @@ $(document).ready(function() {
 
 function initEventListeners(){
 
-    $(document).bind('keydown', 'space', function(e){
-        console.log('snapshot');
-        take_snapshot();
+    $(document).bind('keypress', function(e){
+        if (e.which == 32){
+            console.log('snapshot');
+            take_snapshot();
+        }
     });
 
+    $('#results').show();
     };
-
 
 
 function loadAlbums() {
