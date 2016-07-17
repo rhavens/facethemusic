@@ -334,8 +334,6 @@ app.post('/get_vision_info', function(req, res) {
             catch (e) {
               res.send({'error':'no face found'});
             }
-            console.log(faceObj);
-            res.send(faceObj);
           }
         });
       }
