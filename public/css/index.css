@@ -35,7 +35,17 @@
 }
 
 .webcam-container {
-    background-color: white;
+    height: 400px;
+    width: 400px;
+    position: absolute;
+    z-index: 1;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.emotionImage-container{
+    height: 250px;
+    width: 250px;
     position: absolute;
     z-index: 1;
 }
