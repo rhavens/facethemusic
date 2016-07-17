@@ -16,8 +16,8 @@
     <script src='//code.jquery.com/jquery-2.2.4.min.js'></script>  
     <!-- Local JS -->
     <script src='js/shared.js'></script>
+    <script src='js/webcam.js'></script>
     <script src='js/index.js'></script>
-    <script src='js/vision.js'></script>
     <!-- d3js -->
     <script src='//d3js.org/d3.v3.min.js'></script>
     <!-- Bootstrap CSS -->
@@ -40,9 +40,13 @@
     <div class='container webcam-container'>
       <div class='webcam-inner'>
         <div id="my_camera"></div>
-        
+
         <!-- A button for taking snaps -->
-        <form>
+        <form action='...' method='post' enctype='multipart/form-data' style='position: absolute;top: 0;left: 100%;'>
+          <div style="text-align: center;">
+          <input type="button" value="Take Snapshot" onclick="take_snapshot()">
+          </div>
+        </form>'>
           <div style="text-align: center;">
           <input type=button value="Take Snapshot" onClick="take_snapshot()">
           </div>
@@ -77,33 +81,6 @@
       <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
     </div>
   </div>
-  <!-- First, include the Webcam.js JavaScript Library -->
-  <script type="text/javascript" src="/js/webcam.js"></script>
-  
-  <!-- Configure a few settings and attach camera -->
-  <script language="JavaScript">
-    Webcam.set({
-      width: 600,
-      height:600,
-      dest_width: 250,         // size of captured image
-      dest_height: 250,
-      image_format: 'jpeg',
-      jpeg_quality: 100
-    });
-    Webcam.attach( '#my_camera' );
-  </script>
-  
-  <!-- Code to handle taking the snapshot and displaying it locally -->
-  <script language="JavaScript">
-    function take_snapshot() {
-      // take snapshot and get image data
-      Webcam.snap( function(data_uri) {
-        // display results in page
-        document.getElementById('results').innerHTML = 
-          '<img src="'+data_uri+'"/>';
-      } );
-    }
-  </script>
 </body>
 </html>
 
