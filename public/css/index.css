@@ -36,41 +36,21 @@
 }
 
 .webcam-container {
-    height: 400px;
-    width: 400px;
-    position: absolute;
     z-index: 1;
-    margin-right: auto;
-    margin-left: auto;
 }
 
-.emotionImage-container{
-    height: 250px;
-    width: 250px;
-    position: absolute;
+.dev-container{
     z-index: 1;
     top: 0;
     bottom: 0;
     right: 50%;
     left: 0;
+    padding:20px;
     width: auto;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    margin-left: 10px;
-    border-radius: 15px;
+    background-color: blue;
+    color: white;
 }
 
-.webcam-inner {
-    border: solid 2px black;
-    border-radius: 15px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    margin: 10px;
-    padding: 15px;
-}
 
 .spotify-container {
     background-color: white;
@@ -86,3 +66,10 @@
     border-radius: 15px;
     margin-right: 20px;
 }
+
+.live-video {
+    position: relative;
+    top: -110px;
+}
+
+

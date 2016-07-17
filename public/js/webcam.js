@@ -148,6 +148,7 @@ var Webcam = {
             video.setAttribute('autoplay', 'autoplay');
             video.style.width = '' + this.params.dest_width + 'px';
             video.style.height = '' + this.params.dest_height + 'px';
+            video.className += 'live-video';
             
             if ((scaleX != 1.0) || (scaleY != 1.0)) {
                 elem.style.overflow = 'hidden';
@@ -269,6 +270,12 @@ var Webcam = {
         else {
             this.params[ arguments[0] ] = arguments[1];
         }
+
+        // console.log($('#live-webcam').width());
+        this.params['width'] = $('#live-webcam').width();
+        this.params['height'] = $('#live-webcam').width();
+
+
     },
     
     on: function(name, callback) {

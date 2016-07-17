@@ -4,9 +4,21 @@ Globals.AccessToken = {};
 $(document).ready(function() {
     loadAlbums();
     scrollThingsIntoView();
+    initEventListeners();
     initWebcam();
     $.when(getSpotifyData()).then(function() { moreReady() });
 });
+
+function initEventListeners(){
+
+    $(document).bind('keydown', 'space', function(e){
+        console.log('snapshot');
+        Webcam.snap( function(data_uri) {document.getElementById('results').innerHTML = '<img src="'+data_uri+'"/>';} );
+    });
+    
+    };
+
+
 
 function loadAlbums() {
     $.ajax({
