@@ -61,32 +61,15 @@
 .spotify-container {
     background-color: rgba(0,0,0,0.5);
     z-index: 1;
-    margin-top: 24px;
-    height: 806px;
-    pointer-events: none;
+    margin-top: 35px;
+    height: 783px;
 }
 
-.live-video {
-    position: relative;
-    top: -120px;
-}
 
 video {
     height: 100% !important;
     width: 100% !important;
-    transform: none !important;   
-}
-
-audio {
-    pointer-events: all;
-    width: 100%;
-    border-radius: 50px;
-}
-
-iframe {
-    pointer-events: all;
-}
-
-#results {
-    pointer-events: all;
+    transform: none !important; 
+    top: -110px;
+    position: relative;  
 }
