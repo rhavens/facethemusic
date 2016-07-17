@@ -126,10 +126,12 @@ function getVisionInfo(image) {
             console.log(oReq.responseText);
             var data = JSON.parse(oReq.responseText);
 
-            var joy = data.joy/2. + 2.5*Globals.Data[3].value;
-            var sad = data.sad/2. + 2.5*Globals.Data[1].value;
-            var angry = data.angry/2. + 2.5*Globals.Data[0].value;
+            var joy = data.joy/3. + 2*Globals.Data[3].value;
+            var sad = data.sad/2. + 3.*Globals.Data[1].value;
+            var angry = data.anger/2. + 3.*Globals.Data[0].value;
             var surprise = data.surprise/2. + 2.5*Globals.Data[2].value;
+
+            console.log(joy,sad,angry,surprise);
 
             var emotions = [joy,sad,angry,surprise];
             var mostProminent = indexOfMax(emotions);
@@ -239,7 +241,7 @@ function mapToMusic(emotion) {
         case 'angry':
             $('#display-text').html("Get angry!");
             options.target_energy = 0.8;
-            options.target_valence = 0.3;
+            options.target_valence = 0.5;
             options.target_danceability = 0.8;
             options.target_loudness = -60;
             options.target_tempo = 140;
@@ -263,15 +265,20 @@ function mapToMusic(emotion) {
         tgurl += i + '=' + options[i] + '&';
     }
 
-    $.ajax({
-        url: tgurl,
-        dataType: 'json',
-        headers: { 'Authorization': 'Bearer ' + Globals.AccessToken },
-        json: true,
-        success: function(data) {
-            renderSpotifyMusic(data);
-        }
-    });
+    try {
+        $.ajax({
+            url: tgurl,
+            dataType: 'json',
+            headers: { 'Authorization': 'Bearer ' + Globals.AccessToken },
+            json: true,
+            success: function(data) {
+                renderSpotifyMusic(data);
+            }
+        });
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
 
 function renderSpotifyMusic(data) {

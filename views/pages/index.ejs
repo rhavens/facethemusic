@@ -52,13 +52,15 @@ s
       <h2 id='display-text' class='page-title' style='font-size:48px;'>Press spacebar to begin</h2>
       <div id='music-display'></div>
       <div id="results"></div>
-      <div id='container' class='hidden'>
-        <video id='videoe1' width='200' height='150'></video>
-        <canvas id='overlay' width='200' height='150'></canvas>
-        <canvas id='sketch'></canvas>
-        <canvas width="11px" height="781px" id="renderCanvas" style="display:none;"></canvas>
-        <div id='stats' class='hidden'>
-          <div id='emotion_chart'></div>
+      <div class='row'>
+        <div id='container' style='position:absolute; top:550px; left:50px; width: 200px;' class='hidden'>
+          <video id='videoe1' width='200' height='150'></video>
+          <canvas id='overlay' width='200' height='150'></canvas>
+          <canvas id='sketch'></canvas>
+          <canvas width="11px" height="781px" id="renderCanvas" style="display:none;"></canvas>
+          <div id='stats' class='hidden'>
+            <div id='emotion_chart'></div>
+          </div>
         </div>
       </div>
     </div>

@@ -77,13 +77,15 @@ audio {
     height: 100% !important;
     width: 100% !important;
     transform: none !important;
-    top: -110px !important;
+    top: -125px !important;
     position: relative !important;
     pointer-events: none;
 }
 
 #live-webcam {
     pointer-events: none;
+    width: 1100px;
+    height: 930px;
 }
 
 .hidden {
