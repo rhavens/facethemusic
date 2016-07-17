@@ -210,6 +210,7 @@ function mapToMusic(emotion) {
         target_loudness, min_popularity=60, target_popularity=70;
     switch (emotion) {
         case 'happy':
+            $('#display-text').html('Feeling good?');
             options.target_energy = 0.8;
             options.target_valence = 0.8;
             options.target_danceability = 0.8;
@@ -218,6 +219,7 @@ function mapToMusic(emotion) {
             options.seed_genres = happy_genre.join(',');
             break;
         case 'sad':
+            $('#display-text').html("It's okay to cry...");
             options.target_energy = 0.3;
             options.target_valence = 0.2;
             options.target_danceability = 0.2;
@@ -226,6 +228,7 @@ function mapToMusic(emotion) {
             options.seed_genres = sad_genre.join(',');
             break;
         case 'surprise':
+            $('#display-text').html("WHOA!");
             options.target_energy = 1.0;
             options.target_valence = 0.5;
             options.target_danceability = 1.0;
@@ -234,6 +237,7 @@ function mapToMusic(emotion) {
             options.seed_genres = surprise_genre.join(',');
             break;
         case 'angry':
+            $('#display-text').html("Get angry!");
             options.target_energy = 0.8;
             options.target_valence = 0.3;
             options.target_danceability = 0.8;
@@ -242,6 +246,7 @@ function mapToMusic(emotion) {
             options.seed_genres = angry_genre.join(',');
             break;
         case 'neutral':
+            $('#display-text').html("Try it again with more emotion");
             options.target_energy = 0.4;
             options.target_valence = 0.5;
             options.target_danceability = 0.4;
@@ -253,7 +258,7 @@ function mapToMusic(emotion) {
     options.min_popularity = min_popularity;
     options.target_popularity = target_popularity;
 
-    var tgurl = 'https://api.spotify.com/v1/recommendations?limit=10&';
+    var tgurl = 'https://api.spotify.com/v1/recommendations?limit=20&';
     for (i in options) {
         tgurl += i + '=' + options[i] + '&';
     }

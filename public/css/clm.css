@@ -4,17 +4,17 @@
 #overlay {
     position: absolute;
     top: 0px;
-    left: 0px;
+    right: 0px;
     -ms-filter : fliph; /*IE*/
     filter : fliph; /*IE*/
 }
 
-#videoel {
-    -o-transform : scaleX(-1);
-    -webkit-transform : scaleX(-1);
-    transform : scaleX(-1);
+#container video, #videoel {
     -ms-filter : fliph; /*IE*/
     filter : fliph; /*IE*/
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 #container {
@@ -83,4 +83,9 @@ h2 {
 
 svg {
     background-color: rgba(255,255,255,0.5);
+}
+
+#stats {
+    top: 150px;
+    position: relative;
 }

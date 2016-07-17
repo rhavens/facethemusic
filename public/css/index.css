@@ -79,6 +79,11 @@ audio {
     transform: none !important;
     top: -110px !important;
     position: relative !important;
+    pointer-events: none;
+}
+
+#live-webcam {
+    pointer-events: none;
 }
 
 .hidden {
