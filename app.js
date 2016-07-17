@@ -306,14 +306,23 @@ app.post('/get_vision_info', function(req, res) {
             console.log('good?')
             console.log(apiResponse);
             console.log(JSON.stringify(apiResponse));
-            var faceObj = {
-                "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
-                "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
-                "sad": getFaceValue(apiResponse.responses[0].faceAnnotations[0].sorrowLikelihood),
-                "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
-                "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
+            console.log(apiResponse.responses)
+            console.log(apiResponse.responses.length)
+            console.log(Object.keys(apiResponse.responses).length)
+            console.log(apiResponse.responses[0])
+            try {
+              var faceObj = {
+                  "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
+                  "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
+                  "sad": getFaceValue(apiResponse.responses[0].faceAnnotations[0].sorrowLikelihood),
+                  "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
+                  "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
+              }
+              res.send(faceObj);
             }
-            res.send(faceObj);
+            catch (e) {
+              res.send({'error':'no face found'});
+            }
           }
         });
       }
