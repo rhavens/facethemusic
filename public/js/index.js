@@ -1,20 +1,26 @@
 Globals = {};
 Globals.AccessToken = {};
+Globals.Data = {}
 
 $(document).ready(function() {
     loadAlbums();
     scrollThingsIntoView();
     initEventListeners();
     initWebcam();
-    setTimeout(initClmTrackr(),3000);
+    test();
+    $('#startbutton').click();
     $.when(getSpotifyData()).then(function() { moreReady() });
 });
 
 function initEventListeners(){
     $(document).keyup(function(e){
         if (e.keyCode == 32) { //space
-            console.log('snapshot');
-            take_snapshot();
+            if (Globals.Enabled) {
+                Globals.Enabled = false;
+                console.log('snapshot');
+                take_snapshot();
+                Globals.Data = d3.selectAll('rect').data();
+            }
         }
     });
     $('body').on('click','iframe', function(e) {
@@ -69,6 +75,7 @@ function getSpotifyData() {
 }
 
 function moreReady() {
+    Globals.Enabled = true;
     console.log(Globals.AccessToken);
 }
 
@@ -85,6 +92,24 @@ function take_snapshot() {
     });
 }
 
+function indexOfMax(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    }
+
+    return maxIndex;
+}
+
 function getVisionInfo(image) {
     var oReq = new XMLHttpRequest();
     oReq.open("POST",'get_vision_info',true);
@@ -95,33 +120,55 @@ function getVisionInfo(image) {
         if (oReq.readyState === XMLHttpRequest.DONE && oReq.status === 200) {
             console.log(oReq.responseText);
             var data = JSON.parse(oReq.responseText);
-            if (data.joy >= 3) {
+
+            var joy = data.joy/2. + 2.5*Globals.Data[3].value;
+            var sad = data.sad/2. + 2.5*Globals.Data[1].value;
+            var angry = data.angry/2. + 2.5*Globals.Data[0].value;
+            var surprise = data.surprise/2. + 2.5*Globals.Data[2].value;
+
+            var emotions = [joy,sad,angry,surprise];
+            var mostProminent = indexOfMax(emotions);
+
+            if (mostProminent == 0) {
                 mapToMusic('happy');
             }
-            else if (data.sad >= 3) {
-                mapToMusic('sad');
+            else if (mostProminent == 1) {
+                mapToMusic('sad')
             }
-            else if (data.anger >= 3) {
-                mapToMusic('angry');
-            }
-            else if (data.surprise >= 3) {
-                mapToMusic('surprise');
-            }
-            else if (data.joy == 2) {
-                mapToMusic('happy');
-            }
-            else if (data.sad == 2) {
-                mapToMusic('sad');
-            }
-            else if (data.anger == 2) {
-                mapToMusic('angry');
-            }
-            else if (data.surprise == 2) {
-                mapToMusic('surprise');
+            else if (mostProminent == 2) {
+                mapToMusic('angry')
             }
             else {
-                mapToMusic('neutral');
+                mapToMusic('surprise');
             }
+
+            // if (data.joy >= 3) {
+            //     mapToMusic('happy');
+            // }
+            // else if (data.sad >= 3) {
+            //     mapToMusic('sad');
+            // }
+            // else if (data.anger >= 3) {
+            //     mapToMusic('angry');
+            // }
+            // else if (data.surprise >= 3) {
+            //     mapToMusic('surprise');
+            // }
+            // else if (data.joy <= 3) {
+            //     mapToMusic('happy');
+            // }
+            // else if (data.sad <= 3) {
+            //     mapToMusic('sad');
+            // }
+            // else if (data.anger <= 3) {
+            //     mapToMusic('angry');
+            // }
+            // else if (data.surprise == ) {
+            //     mapToMusic('surprise');
+            // }
+            // else {
+            //     mapToMusic('neutral');
+            // }
         }
     };
     image = image.replace('data:image/jpeg;base64,','');
@@ -227,10 +274,12 @@ function renderSpotifyMusic(data) {
 
     var audio = $('<audio controls autoplay><source src='+songObj['preview_url']+' type=audio/mpeg></source></audio>').appendTo('#results');
     console.log(audio);
+    Globals.Enabled = true;
     $('<iframe src="https://embed.spotify.com/?uri='+ songObj['uri'] +'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>').appendTo('#results');
 }
 
 function initClmTrackr() {
+    return;
     // setTimeout(function() {
     //     console.log('test');
     // var videoInput = document.getElementById('my_camera');
@@ -257,17 +306,17 @@ function initClmTrackr() {
     // drawLoop();
     // }, 1000);
 
-    var vid = document.getElementById('my_camera');
+    var vid = document.getElementById('my_camera').querySelector('video');
     var overlay = document.getElementById('canvas');
     var overlayCC = overlay.getContext('2d');
     
     /********** check and set up video/webcam **********/
 
-    function enablestart() {
-        var startbutton = document.getElementById('startbutton');
-        startbutton.value = "start";
-        startbutton.disabled = null;
-    }
+    // function enablestart() {
+    //     var startbutton = document.getElementById('startbutton');
+    //     startbutton.value = "start";
+    //     startbutton.disabled = null;
+    // }
     
     /*var insertAltVideo = function(video) {
         if (supports_video()) {
@@ -276,54 +325,50 @@ function initClmTrackr() {
             } else if (supports_h264_baseline_video()) {
                 video.src = "../media/cap12_edit.mp4";
             } else {
-                return false;
+                return false;\
             }
             //video.play();
             return true;
         } else return false;
     }*/
 
-    vid.addEventListener('canplay', startVideo, false);
+    // vid.addEventListener('canplay', startVideo, false);
     
     /*********** setup of emotion detection *************/
 
     var ctrack = new clm.tracker({useWebGL : true});
     ctrack.init(pModel);
 
-    function startVideo() {
-        // start video
-        vid.play();
-        // start tracking
-        ctrack.start(vid);
-        // start loop to draw face
-        drawLoop();
-    }
-    
+
+    Globals.ec = new emotionClassifier();
+    console.log(Globals.ec);
+    Globals.ec.init(emotionModel);
+    var emotionData = Globals.ec.getBlank();    
+
     function drawLoop() {
-        requestAnimFrame(drawLoop);
+        // requestAnimFrame(drawLoop);
         overlayCC.clearRect(0, 0, 400, 300);
         //psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
         if (ctrack.getCurrentPosition()) {
             ctrack.draw(overlay);
         }
         var cp = ctrack.getCurrentParameters();
-        
-        var er = ec.meanPredict(cp);
+  
+        var er = 0;      
+        var er = Globals.ec.meanPredict(cp);
         if (er) {
             updateData(er);
             for (var i = 0;i < er.length;i++) {
                 if (er[i].value > 0.4) {
-                    document.getElementById('icon'+(i+1)).style.visibility = 'visible';
+                    // document.getElementById('icon'+(i+1)).style.visibility = 'visible';
                 } else {
-                    document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
+                    // document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
                 }
             }
         }
     }
     
-    var ec = new emotionClassifier();
-    ec.init(emotionModel);
-    var emotionData = ec.getBlank();    
+
     
     /************ d3 code for barchart *****************/
 
@@ -336,7 +381,7 @@ function initClmTrackr() {
     var formatPercent = d3.format(".0%");
     
     var x = d3.scale.linear()
-        .domain([0, ec.getEmotions().length]).range([margin.left, width+margin.left]);
+        .domain([0, Globals.ec.getEmotions().length]).range([margin.left, width+margin.left]);
 
     var y = d3.scale.linear()
         .domain([0,1]).range([0, height]);
@@ -382,6 +427,7 @@ function initClmTrackr() {
 
     function updateData(data) {
         // update
+        console.log('test');
         var rects = svg.selectAll("rect")
             .data(data)
             .attr("y", function(datum) { return height - y(datum.value); })
@@ -405,10 +451,213 @@ function initClmTrackr() {
     stats = new Stats();
     stats.domElement.style.position = 'absolute';
     stats.domElement.style.top = '0px';
-    document.getElementById('container').appendChild( stats.domElement );
+    document.getElementById('results').appendChild( stats.domElement );
 
     // update stats on every iteration
     document.addEventListener('clmtrackrIteration', function(event) {
         stats.update();
     }, false);
+
+    // var startVideo = Globals.startVideo = function startVideo() {
+        // start video
+        vid.play();
+        // start tracking
+        ctrack.start(vid);
+        // start loop to draw face
+        drawLoop();
+    // }
+}
+
+
+function test() {
+
+
+var vid = $('#videoe1').get(0);
+var overlay = $('#overlay').get(0);//document.getElementById('overlay');
+var overlayCC = overlay.getContext('2d');
+
+console.log(vid);
+console.log(document);
+
+/********** check and set up video/webcam **********/
+
+function enablestart() {
+    var startbutton = document.getElementById('startbutton');
+    startbutton.value = "start";
+    startbutton.disabled = null;
+}
+
+/*var insertAltVideo = function(video) {
+    if (supports_video()) {
+        if (supports_ogg_theora_video()) {
+            video.src = "../media/cap12_edit.ogv";
+        } else if (supports_h264_baseline_video()) {
+            video.src = "../media/cap12_edit.mp4";
+        } else {
+            return false;
+        }
+        //video.play();
+        return true;
+    } else return false;
+}*/
+navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+window.URL = window.URL || window.webkitURL || window.msURL || window.mozURL;
+
+// check for camerasupport
+if (navigator.getUserMedia) {
+    // set up stream
+    
+    var videoSelector = {video : true};
+    if (window.navigator.appVersion.match(/Chrome\/(.*?) /)) {
+        var chromeVersion = parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10);
+        if (chromeVersion < 20) {
+            videoSelector = "video";
+        }
+    };
+
+    navigator.getUserMedia(videoSelector, function( stream ) {
+        if (vid.mozCaptureStream) {
+            vid.mozSrcObject = stream;
+        } else {
+            vid.src = (window.URL && window.URL.createObjectURL(stream)) || stream;
+        }
+        vid.play();
+    }, function() {
+        //insertAltVideo(vid);
+        alert("There was some problem trying to fetch video from your webcam. If you have a webcam, please make sure to accept when the browser asks for access to your webcam.");
+    });
+} else {
+    //insertAltVideo(vid);
+    alert("This demo depends on getUserMedia, which your browser does not seem to support. :(");
+}
+
+vid.addEventListener('canplay', function() { startVideo() }, false);
+
+/*********** setup of emotion detection *************/
+
+var ctrack = new clm.tracker({useWebGL : true});
+ctrack.init(pModel);
+
+startVideo = function() {
+    // start video
+    vid.play();
+    // start tracking
+    ctrack.start(vid);
+    // start loop to draw face
+    drawLoop();
+}
+
+drawLoop = function() {
+    requestAnimFrame(drawLoop);
+    overlayCC.clearRect(0, 0, 400, 300);
+    //psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
+    if (ctrack.getCurrentPosition()) {
+        ctrack.draw(overlay);
+    }
+    var cp = ctrack.getCurrentParameters();
+    
+    var er = ec.meanPredict(cp);
+    if (er) {
+        updateData(er);
+        for (var i = 0;i < er.length;i++) {
+            if (er[i].value > 0.4) {
+                // document.getElementById('icon'+(i+1)).style.visibility = 'visible';
+            } else {
+                // document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
+            }
+        }
+    }
+}
+
+var ec = new emotionClassifier();
+ec.init(emotionModel);
+var emotionData = ec.getBlank();    
+
+/************ d3 code for barchart *****************/
+
+var margin = {top : 20, right : 20, bottom : 10, left : 40},
+    width = 400 - margin.left - margin.right,
+    height = 100 - margin.top - margin.bottom;
+
+var barWidth = 30;
+
+var formatPercent = d3.format(".0%");
+
+var x = d3.scale.linear()
+    .domain([0, ec.getEmotions().length]).range([margin.left, width+margin.left]);
+
+var y = d3.scale.linear()
+    .domain([0,1]).range([0, height]);
+
+var svg = d3.select("#emotion_chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+
+svg.selectAll("rect").
+  data(emotionData).
+  enter().
+  append("svg:rect").
+  attr("x", function(datum, index) { return x(index); }).
+  attr("y", function(datum) { return height - y(datum.value); }).
+  attr("height", function(datum) { return y(datum.value); }).
+  attr("width", barWidth).
+  attr("fill", "#2d578b");
+
+svg.selectAll("text.labels").
+  data(emotionData).
+  enter().
+  append("svg:text").
+  attr("x", function(datum, index) { return x(index) + barWidth; }).
+  attr("y", function(datum) { return height - y(datum.value); }).
+  attr("dx", -barWidth/2).
+  attr("dy", "1.2em").
+  attr("text-anchor", "middle").
+  text(function(datum) { return datum.value;}).
+  attr("fill", "white").
+  attr("class", "labels");
+
+svg.selectAll("text.yAxis").
+  data(emotionData).
+  enter().append("svg:text").
+  attr("x", function(datum, index) { return x(index) + barWidth; }).
+  attr("y", height).
+  attr("dx", -barWidth/2).
+  attr("text-anchor", "middle").
+  attr("style", "font-size: 12").
+  text(function(datum) { return datum.emotion;}).
+  attr("transform", "translate(0, 18)").
+  attr("class", "yAxis");
+
+updateData = function(data) {
+    // update
+    var rects = svg.selectAll("rect")
+        .data(data)
+        .attr("y", function(datum) { return height - y(datum.value); })
+        .attr("height", function(datum) { return y(datum.value); });
+    var texts = svg.selectAll("text.labels")
+        .data(data)
+        .attr("y", function(datum) { return height - y(datum.value); })
+        .text(function(datum) { return datum.value.toFixed(1);});
+
+    // enter 
+    rects.enter().append("svg:rect");
+    texts.enter().append("svg:text");
+
+    // exit
+    rects.exit().remove();
+    texts.exit().remove();
+}
+
+/******** stats ********/
+
+stats = new Stats();
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.top = '0px';
+document.getElementById('container').appendChild( stats.domElement );
+
+// update stats on every iteration
+document.addEventListener('clmtrackrIteration', function(event) {
+    stats.update();
+}, false);
+
 }

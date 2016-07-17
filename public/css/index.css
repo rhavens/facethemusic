@@ -71,11 +71,11 @@
     top: -120px;
 }
 
-video {
+/*video {
     height: 100% !important;
     width: 100% !important;
     transform: none !important;   
-}
+}*/
 
 audio {
     pointer-events: all;
