@@ -61,7 +61,7 @@
 .spotify-container {
     background-color: rgba(0,0,0,0.5);
     z-index: 1;
-    margin-top: 35px;
+    margin-top: 20px;
     height: 783px;
 }
 
@@ -76,6 +76,6 @@ audio {
     height: 100% !important;
     width: 100% !important;
     transform: none !important;
-    top: -110px;
-    position: relative;
+    top: -110px !important;
+    position: relative !important;
 }
