@@ -294,7 +294,7 @@ app.post('/get_vision_info', function(req, res) {
         res.send({'error':'error writing image'});
       }
       else {
-        vision.detectFaces('public/output.jpg', function(err, faces, apiResponse, other) {
+        vision.detectFaces('public/output.jpg', function(err, faces, apiResponse) {
           var err_p = err || apiResponse.responses[0].error || null;
           if (err_p) {
             console.log('error in google');
@@ -302,7 +302,7 @@ app.post('/get_vision_info', function(req, res) {
           }
           else {
             try {
-              console.log(JSON.stringify(apiResponse));
+              // console.log(JSON.stringify(apiResponse));
               var faceObj = {
                   "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
                   "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
@@ -310,6 +310,7 @@ app.post('/get_vision_info', function(req, res) {
                   "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
                   "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
               }
+              console.log(faceObj);
               res.send(faceObj);
               // var authOptions = {
               //   url: 'https://api.projectoxford.ai/emotion/v1.0/recognize',
