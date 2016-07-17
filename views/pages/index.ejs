@@ -23,7 +23,7 @@
     <!-- Bootstrap CSS -->
     <link rel='stylesheet' href='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css' />
     <!-- Bootstrap JS -->
-    <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+    <script src='//maxcdn.bootstrapcdn.com/boosststrap/3.3.6/js/bootstrap.min.js'></script>
     <!-- Local CSS -->
     <link rel='stylesheet' href='css/shared.css' />
     <link rel='stylesheet' href='css/index.css' />
@@ -39,13 +39,16 @@
   <div id='program-body'>
     <div class='container webcam-container'>
       <div class='webcam-inner'>
-        <h1>Sample Text</h1>
+        <div id="my_camera"></div>
       </div>
     </div>
     <div class='container spotify-container'>
       <div class='webcam-inner'>
         <h1>Sample Text</h1>
       </div>
+    </div>
+    <div class='container emotionImage-container'>
+        <div id="results"></div>
     </div>
     <div class='container album-body'>
       <div class='row'></div>
@@ -67,6 +70,40 @@
       <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
     </div>
   </div>
+  <!-- First, include the Webcam.js JavaScript Library -->
+  <script type="text/javascript" src="/js/webcam.js"></script>
+  
+  <!-- Configure a few settings and attach camera -->
+  <script language="JavaScript">
+    Webcam.set({
+      width: 600,
+      height:600,
+      dest_width: 250,         // size of captured image
+      dest_height: 250,
+      image_format: 'jpeg',
+      jpeg_quality: 100
+    });
+    Webcam.attach( '#my_camera' );
+  </script>
+  
+  <!-- A button for taking snaps -->
+  <form>
+    <div style="text-align: center;">
+    <input type=button value="Take Snapshot" onClick="take_snapshot()">
+    </div>
+  </form>
+  
+  <!-- Code to handle taking the snapshot and displaying it locally -->
+  <script language="JavaScript">
+    function take_snapshot() {
+      // take snapshot and get image data
+      Webcam.snap( function(data_uri) {
+        // display results in page
+        document.getElementById('results').innerHTML = 
+          '<img src="'+data_uri+'"/>';
+      } );
+    }
+  </script>
 </body>
 </html>
 
