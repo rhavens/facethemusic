@@ -1,7 +1,20 @@
+Globals = {};
+Globals.AccessToken = {};
+
 $(document).ready(function() {
     loadAlbums();
     scrollThingsIntoView();
+    initEventListeners();
+    $.when(getSpotifyData()).then(function() { moreReady() });
 });
+
+
+function initEventListeners(){
+
+    
+}
+
+
 
 function loadAlbums() {
     $.ajax({
@@ -15,4 +28,26 @@ function loadAlbums() {
             });
         }
     })
+}
+
+// todo
+function scrollThingsIntoView() {
+
+}
+
+function getSpotifyData() {
+    return $.ajax({
+        url: 'get_token',
+        dataType: 'json',
+        success: function(data) {
+            if ('access_token' in data) { // success
+                Globals.AccessToken = data.access_token;
+                Globals.AccessTokenExpiry = new Date().getTime() + data.expires_in;
+            }
+        }
+    });
+}
+
+function moreReady() {
+    console.log(Globals.AccessToken);
 }
