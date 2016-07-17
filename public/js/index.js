@@ -16,6 +16,9 @@ function initEventListeners(){
             take_snapshot();
         }
     });
+    $('body').on('click','iframe', function(e) {
+        $('audio').pause();
+    });
 };
 
 
@@ -31,7 +34,7 @@ function loadAlbums() {
                 $(rows[k%4]).append($('<img>').attr('src',v).addClass('album-image'));
             });
         }
-    })
+    });
 }
 
 // todo
@@ -90,6 +93,34 @@ function getVisionInfo(image) {
     oReq.onreadystatechange = function() {
         if (oReq.readyState === XMLHttpRequest.DONE && oReq.status === 200) {
             console.log(oReq.responseText);
+            var data = JSON.parse(oReq.responseText);
+            if (data.joy >= 3) {
+                mapToMusic('happy');
+            }
+            else if (data.sad >= 3) {
+                mapToMusic('sad');
+            }
+            else if (data.anger >= 3) {
+                mapToMusic('angry');
+            }
+            else if (data.surprise >= 3) {
+                mapToMusic('surprise');
+            }
+            else if (data.joy == 2) {
+                mapToMusic('happy');
+            }
+            else if (data.sad == 2) {
+                mapToMusic('sad');
+            }
+            else if (data.anger == 2) {
+                mapToMusic('angry');
+            }
+            else if (data.surprise == 2) {
+                mapToMusic('surprise');
+            }
+            else {
+                mapToMusic('neutral');
+            }
         }
     };
     image = image.replace('data:image/jpeg;base64,','');
@@ -117,56 +148,61 @@ function mapToMusic(emotion) {
                        "punk", "rock", "romance", "sad", "work-out"];
     var happy_genre = ['alternative','club','disco','edm','funk'];
     var sad_genre = ['blues','chill','emo','grunge','sad'];
-    var surprised_genre = ['club','opera','party','romance'];
-    var angry_genre = ['alternative','dubstep','death-metal','hip-hop','punk','rock','work-out'];
+    var surprise_genre = ['club','opera','party','romance'];
+    var angry_genre = ['dubstep','death-metal','hip-hop','punk','work-out'];
     var neutral_genre = ['chill','classical','rock','jazz'];
 
     var options = {}
     var seed_genres, target_energy, target_valence, target_danceability, target_tempo,
-        target_loudness, min_popularity=0.6, target_popularity=0.7;
+        target_loudness, min_popularity=60, target_popularity=70;
     switch (emotion) {
         case 'happy':
             options.target_energy = 0.8;
             options.target_valence = 0.8;
             options.target_danceability = 0.8;
-            options.target_loudness = 0.5;
+            options.target_loudness = -30;
             options.target_tempo = 120;
+            options.seed_genres = happy_genre.join(',');
             break;
         case 'sad':
             options.target_energy = 0.3;
             options.target_valence = 0.2;
             options.target_danceability = 0.2;
-            options.target_loudness = 0.3;
+            options.target_loudness = -20;
             options.target_tempo = 80;
+            options.seed_genres = sad_genre.join(',');
             break;
-        case 'surprised':
+        case 'surprise':
             options.target_energy = 1.0;
             options.target_valence = 0.5;
             options.target_danceability = 1.0;
-            options.target_loudness = 1.0;
+            options.target_loudness = -55;
             options.target_tempo = 160;
+            options.seed_genres = surprise_genre.join(',');
             break;
         case 'angry':
             options.target_energy = 0.8;
             options.target_valence = 0.3;
             options.target_danceability = 0.8;
-            options.target_loudness = 1.0;
+            options.target_loudness = -60;
             options.target_tempo = 140;
+            options.seed_genres = angry_genre.join(',');
             break;
         case 'neutral':
             options.target_energy = 0.4;
             options.target_valence = 0.5;
             options.target_danceability = 0.4;
-            options.target_loudness = 0.6;
+            options.target_loudness = -40;
             options.target_tempo = 120;
+            options.seed_genres = neutral_genre.join(',');
             break;
     }
-    options.min_popularity = 0.6;
-    options.target_popularity = 0.8;
+    options.min_popularity = min_popularity;
+    options.target_popularity = target_popularity;
 
-    var tgurl = 'https://api.spotify.com/v1/recommendations?';
+    var tgurl = 'https://api.spotify.com/v1/recommendations?limit=10&';
     for (i in options) {
-        url += i + '=' + options[i] + '&';
+        tgurl += i + '=' + options[i] + '&';
     }
 
     $.ajax({
@@ -187,4 +223,8 @@ function renderSpotifyMusic(data) {
     var songObj = {};
     songObj = real_data[choice];
     console.log(songObj);
+
+    var audio = $('<audio controls autoplay><source src='+songObj['preview_url']+' type=audio/mpeg></source></audio>').appendTo('#results');
+    console.log(audio);
+    $('<iframe src="https://embed.spotify.com/?uri='+ songObj['uri'] +'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>').appendTo('#results');
 }

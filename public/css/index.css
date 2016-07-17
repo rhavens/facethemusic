@@ -43,7 +43,6 @@
     right: 50%;
     bottom: 0;
     width: auto;
-    pointer-events: none;
 }
 
 .dev-container{
@@ -64,15 +63,30 @@
     z-index: 1;
     margin-top: 24px;
     height: 806px;
+    pointer-events: none;
 }
 
 .live-video {
     position: relative;
-    top: -110px;
+    top: -120px;
 }
 
 video {
     height: 100% !important;
     width: 100% !important;
     transform: none !important;   
+}
+
+audio {
+    pointer-events: all;
+    width: 100%;
+    border-radius: 50px;
+}
+
+iframe {
+    pointer-events: all;
+}
+
+#results {
+    pointer-events: all;
 }
