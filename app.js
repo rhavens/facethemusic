@@ -97,7 +97,6 @@ var removeQueryString = function(item) {
 }
 
 var getFaceValue = function (likelihood){
-    console.log(likelihood);
     switch (likelihood){
         case 'VERY_UNLIKELY':
             return 1;
@@ -284,7 +283,6 @@ app.post('/get_vision_info', function(req, res) {
     res.send(err);
   }).on('data', function(chunk) {
     body.push(chunk);
-    console.log('chunk')
   }).on('end', function() {
     body = Buffer.concat(body).toString();
     fs.writeFileSync('image.jpg',body);
@@ -297,32 +295,20 @@ app.post('/get_vision_info', function(req, res) {
       else {
         vision.detectFaces('output.jpg', function(err, faces, apiResponse, other) {
           var err_p = err || apiResponse.responses[0].error || null;
-          console.log(err_p)
           if (err_p) {
             console.log('error in google');
             res.send({'error':err_p});
           }
           else {
-            console.log('good?')
-            console.log(apiResponse);
-            console.log(JSON.stringify(apiResponse));
-            console.log(apiResponse.responses)
-            console.log(apiResponse.responses.length)
-            console.log(Object.keys(apiResponse.responses).length)
-            console.log(apiResponse.responses[0])
-            try {
-              var faceObj = {
-                  "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
-                  "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
-                  "sad": getFaceValue(apiResponse.responses[0].faceAnnotations[0].sorrowLikelihood),
-                  "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
-                  "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
-              }
-              res.send(faceObj);
+            var faceObj = {
+                "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
+                "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
+                "sad": getFaceValue(apiResponse.responses[0].faceAnnotations[0].sorrowLikelihood),
+                "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
+                "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
             }
-            catch (e) {
-              res.send({'error':'no face found'});
-            }
+            console.log(faceObj);
+            res.send(faceObj);
           }
         });
       }
