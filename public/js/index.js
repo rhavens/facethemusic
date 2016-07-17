@@ -202,9 +202,9 @@ function mapToMusic(emotion) {
                        "grunge", "hip-hop", "house", "jazz", "opera", "party", 
                        "punk", "rock", "romance", "sad", "work-out"];
     var happy_genre = ['alternative','club','disco','edm','funk'];
-    var sad_genre = ['blues','chill','emo','grunge','sad'];
+    var sad_genre = ['blues','rainy-day','emo','grunge','sad'];
     var surprise_genre = ['club','opera','party','romance'];
-    var angry_genre = ['dubstep','death-metal','hip-hop','punk','work-out'];
+    var angry_genre = ['dubstep','death-metal','hip-hop','work-out'];
     var neutral_genre = ['chill','classical','rock','jazz'];
 
     var options = {}
@@ -224,9 +224,9 @@ function mapToMusic(emotion) {
             $('#display-text').html("It's okay to cry...");
             options.target_energy = 0.3;
             options.target_valence = 0.2;
-            options.target_danceability = 0.2;
+            options.target_danceability = 0.1;
             options.target_loudness = -20;
-            options.target_tempo = 80;
+            options.target_tempo = 70;
             options.seed_genres = sad_genre.join(',');
             break;
         case 'surprise':
@@ -241,9 +241,9 @@ function mapToMusic(emotion) {
         case 'angry':
             $('#display-text').html("Get angry!");
             options.target_energy = 0.8;
-            options.target_valence = 0.5;
+            options.target_valence = 0.3;
             options.target_danceability = 0.8;
-            options.target_loudness = -60;
+            options.target_loudness = -70;
             options.target_tempo = 140;
             options.seed_genres = angry_genre.join(',');
             break;
