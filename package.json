@@ -20,8 +20,13 @@
     "jade": "^1.11.0",
     "morgan": "^1.6.1",
     "serve-favicon": "^2.3.0",
+<<<<<<< HEAD
     "gcloud": "~0.36.0",
     "googleapis": "~11.0.0",
     "request": "~2.73.0"
+=======
+    "mustache": "~2.2.1",
+    "ejs": "~2.4.2"
+>>>>>>> 117d91e2c66a555c80fafe044ceb231828458bab
   }
 }

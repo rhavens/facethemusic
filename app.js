@@ -17,7 +17,6 @@
 // var path = require('path');
 // var logger = require('morgan');
 // var cookieParser = require('cookie-parser');
-// var bodyParser = require('body-parser');
 
 // var routes = require('./routes/index');
 // var users = require('./routes/users');
@@ -54,10 +53,21 @@ var request = require('request'); // "Request" library
 var path = require('path');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var ejs = require('ejs');
+var url = require('url');
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
+
+var privateKey = fs.readFileSync('keys/server.key','utf-8');
+var certificate = fs.readFileSync('keys/server.crt','utf-8');
+var credentials = {key: privateKey, cert: certificate};
 
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri = "http://interns.dev.viasatcloud.com:3000/callback"; // Your redirect uri
+
 
 /**
  * Generates a random string containing numbers and letters
@@ -74,12 +84,38 @@ var generateRandomString = function(length) {
   return text;
 };
 
+var removeQueryString = function(item) {
+  var obj = url.parse(item);
+  obj.search = obj.query = '';
+  return url.format(obj);
+}
+
 var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-app.use(express.static(__dirname + '/views'))
-   .use(cookieParser());
+
+app.set('views',__dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(bodyParser());
+app.use(express.static(__dirname + '/public'));
+app.use(cookieParser());
+
+app.get('/', function(req,res) {
+  // console.log(res.location());
+  // res.url = removeQueryString(res.url);
+  var access_token = req.query.access_token,
+      refresh_token = req.query.refresh_token;
+  if (access_token) {
+    res.render('pages/index', {
+      access_token: access_token,
+      refresh_token: refresh_token
+    });
+  }
+  else {
+    res.render('pages/index');
+  }
+});
 
 app.get('/login', function(req, res) {
 
@@ -108,8 +144,8 @@ app.get('/callback', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect('/#' +
-      querystring.stringify({
+    res.redirect('/?' + querystring.stringify(
+      {
         error: 'state_mismatch'
       }));
   } else {
@@ -145,20 +181,24 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
+        res.redirect('/?' + querystring.stringify({
+                    access_token: access_token,
+                    refresh_token: refresh_token
+                  }));
       } else {
-        res.redirect('/#' +
-          querystring.stringify({
+        res.redirect('/?' + querystring.stringify({
             error: 'invalid_token'
           }));
       }
     });
   }
 });
+
+app.get('/test', function(req, res) {
+  res.render('pages/test', {foo:'bar'});
+});
+
+
 
 app.get('/refresh_token', function(req, res) {
 
@@ -215,8 +255,8 @@ app.get('/refresh_token', function(req, res) {
 //   });
 // });
 
-app.listen(process.env.PORT, '0.0.0.0', function () {
+var httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(process.env.PORT, '0.0.0.0', function () {
       console.log('Listening on port ' + process.env.PORT + '...');
 });
-
-module.exports = app;
