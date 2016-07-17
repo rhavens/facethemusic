@@ -45,6 +45,9 @@
  * https://developer.spotify.com/web-api/authorization-guide/#authorization_code_flow
  */
 
+console.log('Starting App...');
+var vision = require('./js/vision.js');
+
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var path = require('path');
