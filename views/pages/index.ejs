@@ -17,6 +17,7 @@
     <!-- Local JS -->
     <script src='js/shared.js'></script>
     <script src='js/index.js'></script>
+    <script src='js/vision.js'></script>
     <!-- d3js -->
     <script src='//d3js.org/d3.v3.min.js'></script>
     <!-- Bootstrap CSS -->
@@ -66,73 +67,6 @@
       <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
     </div>
   </div>
-
-  <script>
-    (function() {
-
-      var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-          userProfileTemplate = Handlebars.compile(userProfileSource),
-          userProfilePlaceholder = document.getElementById('user-profile');
-
-      var oauthSource = document.getElementById('oauth-template').innerHTML,
-          oauthTemplate = Handlebars.compile(oauthSource),
-          oauthPlaceholder = document.getElementById('oauth');
-
-      var cs_access_token, cs_refresh_token;
-      <% if (locals.access_token) { %>
-        console.log('wtf');
-        cs_access_token = '<%= access_token %>';
-        cs_refresh_token = '<%= refresh_token %>';
-        localStorage.setItem('cs_access_token',cs_access_token);
-        localStorage.setItem('cs_refresh_token',cs_refresh_token);
-      <% } %>
-      <% if (locals.error) { %>
-        console.log('<%= error %>');
-      <% } %>
-      console.log(cs_access_token,cs_refresh_token);
-
-      if (cs_access_token) {
-          // render oauth info
-          oauthPlaceholder.innerHTML = oauthTemplate({
-            cs_access_token: cs_access_token,
-            cs_refresh_token: cs_refresh_token
-          });
-
-          $.ajax({
-              url: 'https://api.spotify.com/v1/me',
-              headers: {
-                'Authorization': 'Bearer ' + cs_access_token
-              },
-              success: function(response) {
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-
-                  $('#login').hide();
-                  $('#loggedin').show();
-              }
-          });
-        } else {
-            // render initial screen
-            $('#login').show();
-            $('#loggedin').hide();
-        }
-
-        document.getElementById('obtain-new-token').addEventListener('click', function() {
-          $.ajax({
-            url: '/refresh_token',
-            data: {
-              'refresh_token': cs_refresh_token
-            }
-          }).done(function(data) {
-            cs_access_token = data.access_token;
-            localStorage.setItem('cs_access_token',cs_access_token);
-            oauthPlaceholder.innerHTML = oauthTemplate({
-              cs_access_token: cs_access_token,
-              cs_refresh_token: cs_refresh_token
-            });
-          });
-        }, false);
-    })();
-  </script>
 </body>
 </html>
 

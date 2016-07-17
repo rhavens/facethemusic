@@ -46,7 +46,6 @@
  */
 
 console.log('Starting App...');
-var vision = require('./js/vision.js');
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
@@ -59,6 +58,12 @@ var url = require('url');
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
+
+var gcloud = require('gcloud')({
+  keyFilename: './auth/service_account.json',
+  projectId: 'instant-gecko-761'
+});
+var vision = gcloud.vision();
 
 var privateKey = fs.readFileSync('keys/server.key','utf-8');
 var certificate = fs.readFileSync('keys/server.crt','utf-8');
@@ -88,6 +93,24 @@ var removeQueryString = function(item) {
   var obj = url.parse(item);
   obj.search = obj.query = '';
   return url.format(obj);
+}
+
+var getFaceValue = function (likelihood){
+    console.log(likelihood);
+    switch (likelihood){
+        case 'VERY_UNLIKELY':
+            return 1;
+        case 'UNLIKELY':
+            return 2;
+        case 'POSSIBLE':
+            return 3;
+        case 'LIKELY':
+            return 4;
+        case 'VERY_LIKELY':
+            return 5;
+        default:
+            return 'error'
+    }
 }
 
 var stateKey = 'spotify_auth_state';
@@ -225,6 +248,7 @@ app.get('/refresh_token', function(req, res) {
 });
 
 app.get('/get_token', function(req, res) {
+  res.setHeader('content-type','application/json');
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     headers: {
@@ -237,7 +261,6 @@ app.get('/get_token', function(req, res) {
   };
 
   request.post(authOptions, function(error, response, body) {
-    res.setHeader('content-type','application/json');
     if (!error && response.statusCode === 200) {
       res.send(body);
     }
@@ -249,8 +272,31 @@ app.get('/get_token', function(req, res) {
 
 app.get('/get_songs', function(req, res) {
   var emotion = req.query.emotion;
+});
 
+app.get('/get_vision_info', function(req, res) {
+  res.setHeader('content-type','application/json');
+  var image = req.query.image || './manav.PNG';
 
+  vision.detectFaces(image, function(err, faces, apiResponse, other) {
+    if (err) {
+      res.send(err);
+    }
+    else {
+      console.log(apiResponse);
+      console.log(apiResponse.responses[0].faceAnnotations);
+      var faceObj = {
+          "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
+          "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
+          "sad": getFaceValue(apiResponse.responses[0].faceAnnotations[0].sorrowLikelihood),
+          "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
+          "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
+      }
+
+      console.log(faceObj);
+      res.send(faceObj);
+    }
+  })
 });
 
 // // catch 404 and forward to error handler
@@ -289,3 +335,4 @@ var httpsServer = https.createServer(credentials, app);
 httpsServer.listen(process.env.PORT, '0.0.0.0', function () {
       console.log('Listening on port ' + process.env.PORT + '...');
 });
+  
