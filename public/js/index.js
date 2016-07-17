@@ -23,9 +23,8 @@ function initEventListeners(){
             }
         }
     });
-    $('body').on('click','iframe', function(e) {
-        $('audio').pause();
-    });
+
+
 };
 
 
@@ -58,7 +57,7 @@ function initWebcam() {
       image_format: 'jpeg',
       jpeg_quality: 100
     });
-    Webcam.attach( '#my_camera' );
+    Webcam.attach( '#live-webcam' );
 }
 
 function getSpotifyData() {
@@ -272,10 +271,20 @@ function renderSpotifyMusic(data) {
     songObj = real_data[choice];
     console.log(songObj);
 
-    var audio = $('<audio controls autoplay><source src='+songObj['preview_url']+' type=audio/mpeg></source></audio>').appendTo('#results');
-    console.log(audio);
+    var audio = $('audio');
+    if (audio.length) {
+        audio.get(0).pause();
+    }
+    try {
+        $('#music-display').empty();
+        var audio = $('<audio controls autoplay><source src='+songObj['preview_url']+' type=audio/mpeg></source></audio>').appendTo('#music-display');
+        console.log(audio);
+        $('<iframe src="https://embed.spotify.com/?uri='+ songObj['uri'] +'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>').appendTo('#music-display');
+    }
+    catch (e) {
+        console.log(e);
+    }
     Globals.Enabled = true;
-    $('<iframe src="https://embed.spotify.com/?uri='+ songObj['uri'] +'" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>').appendTo('#results');
 }
 
 function initClmTrackr() {
