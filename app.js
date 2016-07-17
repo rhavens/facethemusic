@@ -221,6 +221,35 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
+app.get('/get_token', function(req, res) {
+  var authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    headers: {
+      'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+    },
+    form: {
+      grant_type: 'client_credentials'
+    },
+    json: true
+  };
+
+  request.post(authOptions, function(error, response, body) {
+    res.setHeader('content-type','application/json');
+    if (!error && response.statusCode === 200) {
+      res.send(body);
+    }
+    else {
+      res.send(error);
+    }
+  });
+});
+
+app.get('/get_songs', function(req, res) {
+  var emotion = req.query.emotion;
+
+
+});
+
 // // catch 404 and forward to error handler
 // app.use(function (req, res, next) {
 //   var err = new Error('Not Found');
