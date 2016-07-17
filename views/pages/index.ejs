@@ -40,6 +40,13 @@
     <div class='container webcam-container'>
       <div class='webcam-inner'>
         <div id="my_camera"></div>
+        
+        <!-- A button for taking snaps -->
+        <form>
+          <div style="text-align: center;">
+          <input type=button value="Take Snapshot" onClick="take_snapshot()">
+          </div>
+        </form>
       </div>
     </div>
     <div class='container spotify-container'>
@@ -85,13 +92,6 @@
     });
     Webcam.attach( '#my_camera' );
   </script>
-  
-  <!-- A button for taking snaps -->
-  <form>
-    <div style="text-align: center;">
-    <input type=button value="Take Snapshot" onClick="take_snapshot()">
-    </div>
-  </form>
   
   <!-- Code to handle taking the snapshot and displaying it locally -->
   <script language="JavaScript">
