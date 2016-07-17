@@ -53,6 +53,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var ejs = require('ejs');
 var url = require('url');
+var http = require('http');
+var https = require('https');
+var fs = require('fs');
+
+var privateKey = fs.readFileSync('keys/server.key','utf-8');
+var certificate = fs.readFileSync('keys/server.crt','utf-8');
+var credentials = {key: privateKey, cert: certificate};
 
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
@@ -245,8 +252,8 @@ app.get('/refresh_token', function(req, res) {
 //   });
 // });
 
-app.listen(process.env.PORT, '0.0.0.0', function () {
+var httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(process.env.PORT, '0.0.0.0', function () {
       console.log('Listening on port ' + process.env.PORT + '...');
 });
-
-module.exports = app;
