@@ -73,6 +73,7 @@ var credentials = {key: privateKey, cert: certificate};
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri = "http://interns.dev.viasatcloud.com:3000/callback"; // Your redirect uri
+var azure_key = process.env.AZURE_KEY;
 
 
 /**
@@ -287,28 +288,53 @@ app.post('/get_vision_info', function(req, res) {
     body = Buffer.concat(body).toString();
     fs.writeFileSync('image.jpg',body);
     // fuck it I give up
-    var child = exec('cat image.jpg | base64 --decode > output.jpg', function(error, stdout, stderr) {
+    var child = exec('cat image.jpg | base64 --decode > ./public/output.jpg', function(error, stdout, stderr) {
       if (error !== null) {
         console.log(error);
         res.send({'error':'error writing image'});
       }
       else {
-        vision.detectFaces('output.jpg', function(err, faces, apiResponse) {
+        vision.detectFaces('public/output.jpg', function(err, faces, apiResponse) {
           var err_p = err || apiResponse.responses[0].error || null;
           if (err_p) {
             console.log('error in google');
             res.send({'error':err_p});
           }
           else {
-            var faceObj = {
-                "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
-                "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
-                "sad": getFaceValue(apiResponse.responses[0].faceAnnotations[0].sorrowLikelihood),
-                "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
-                "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
+            try {
+              // console.log(JSON.stringify(apiResponse));
+              var faceObj = {
+                  "joy": getFaceValue(apiResponse.responses[0].faceAnnotations[0].joyLikelihood),
+                  "anger": getFaceValue(apiResponse.responses[0].faceAnnotations[0].angerLikelihood),
+                  "sad": getFaceValue(apiResponse.responses[0].faceAnnotations[0].sorrowLikelihood),
+                  "surprise": getFaceValue(apiResponse.responses[0].faceAnnotations[0].surpriseLikelihood),
+                  "hat": getFaceValue(apiResponse.responses[0].faceAnnotations[0].headwearLikelihood)
+              }
+              console.log(faceObj);
+              res.send(faceObj);
+              // var authOptions = {
+              //   url: 'https://api.projectoxford.ai/emotion/v1.0/recognize',
+              //   headers: { 'Content-type': 'application/octet-stream', 'Ocp-Apim-Subscription-Key': azure_key },
+              //   data: fs.readFileSync('public/output.jpg'),
+              //   processData: false
+              // };
+              // request.post(authOptions, function(error, response, body) {
+              //   if (!error && response.statusCode === 200) {
+              //     console.log('good');
+              //     res.send(response);
+              //   }
+              //   else {
+              //     console.log('error')
+              //     console.log(error);
+              //     console.log(response.statusCode);
+              //     res.send(error);
+              //   }
+              // });
+              // res.send(faceObj);
             }
-            console.log(faceObj);
-            res.send(faceObj);
+            catch (e) {
+              res.send({'error':'no face found'});
+            }
           }
         });
       }

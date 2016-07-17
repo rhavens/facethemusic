@@ -10,9 +10,8 @@ $(document).ready(function() {
 });
 
 function initEventListeners(){
-
-    $(document).bind('keypress', function(e){
-        if (e.which == 32){
+    $(document).keyup(function(e){
+        if (e.keyCode == 32) { //space
             console.log('snapshot');
             take_snapshot();
         }
@@ -29,7 +28,7 @@ function loadAlbums() {
         success: function(data) {
             var div = $('.album-body');
             var rows = div.find('.row');
-            $.each(data, function(k,v) {
+            $.each( data, function(k,v) {
                 $(rows[k%4]).append($('<img>').attr('src',v).addClass('album-image'));
             });
         }
