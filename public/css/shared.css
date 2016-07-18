@@ -45,6 +45,7 @@ html, body {
     margin-right: 10px;
     margin-left: 4px;
     font-size: 80px;
+    pointer-events:all;
 }
 
 .page-title:hover {

@@ -64,6 +64,7 @@
     margin-top: 20px;
     height: 783px;
     text-align: center;
+    pointer-events:none;
 }
 
 audio {

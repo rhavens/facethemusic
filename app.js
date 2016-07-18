@@ -380,7 +380,7 @@ app.post('/get_vision_info', function(req, res) {
 
 var httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(process.env.PORT, '0.0.0.0', function () {
+httpsServer.listen(process.env.PORT || 3000, function () {
       console.log('Listening on port ' + process.env.PORT + '...');
 });
   

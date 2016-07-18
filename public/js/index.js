@@ -126,9 +126,9 @@ function getVisionInfo(image) {
             console.log(oReq.responseText);
             var data = JSON.parse(oReq.responseText);
 
-            var joy = data.joy/3. + 2*Globals.Data[3].value;
+            var joy = data.joy/4. + 1.5*Globals.Data[3].value;
             var sad = data.sad/2. + 3.*Globals.Data[1].value;
-            var angry = data.anger/2. + 3.*Globals.Data[0].value;
+            var angry = data.anger/3. + 3.3*Globals.Data[0].value;
             var surprise = data.surprise/2. + 2.5*Globals.Data[2].value;
 
             console.log(joy,sad,angry,surprise);
