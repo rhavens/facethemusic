@@ -148,7 +148,7 @@ function getVisionInfo(image) {
             }
             else {
                 joy = data.joy/4.;
-                sad = data.sad/4.;
+                sad = data.sad/2.;
                 angry = data.anger/3.;
                 surprise = data.surprise/2.;
             }
