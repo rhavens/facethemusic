@@ -1,7 +1,14 @@
 Globals = {};
 Globals.AccessToken = {};
 Globals.Data = {}
-Globals.modif = [3.3,3.,2.5,1.5];
+Globals.modif = [3.3,2.7,2.5,1.8];
+//  anger/sad/surprise/joy
+
+
+// var joy = data.joy/4. + Globals.modif[3]*Globals.Data[3].value;
+// var sad = data.sad/2. + Globals.modif[1]*Globals.Data[1].value;
+// var angry = data.anger/3. + Globals.modif[0]*Globals.Data[0].value;
+// var surprise = data.surprise/2. + Globals.modif[2]*Globals.Data[2].value;
 
 $(document).ready(function() {
     loadAlbums();
@@ -26,6 +33,12 @@ function initEventListeners(){
         else if (e.keyCode == 73) {
             toggleStats();
         }
+    });
+    $('#info-button').on('click',function() {
+        $('#info-window').css('display','block');
+    });
+    $('#info-window-close').on('click',function() {
+        $('#info-window').css('display','none');
     });
 };
 
@@ -82,7 +95,6 @@ function getSpotifyData() {
 
 function moreReady() {
     Globals.Enabled = true;
-    console.log(Globals.AccessToken);
 }
 
 function take_snapshot() {
@@ -325,9 +337,6 @@ function test() {
 var vid = $('#videoe1').get(0);
 var overlay = $('#overlay').get(0);//document.getElementById('overlay');
 var overlayCC = overlay.getContext('2d');
-
-console.log(vid);
-console.log(document);
 
 /********** check and set up video/webcam **********/
 

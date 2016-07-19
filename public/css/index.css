@@ -96,3 +96,52 @@ audio {
 #toggle-stats {
     pointer-events: all;
 }
+
+#info-button {
+    float: right;
+    transform: translateY(50%);
+    cursor: pointer;
+    margin-right: 30px;
+    height: 52px;
+}
+
+#info-button:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+#info-window {
+    z-index: 99;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    background-color: rgba(0,0,0,0.3);
+}
+
+#info-window .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    pointer-events: all;
+}
+
+#info-window-close {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #333 !important;
+    text-shadow: none !important;
+}
+
+#info-window .container .jumbotron .page-subtitle {
+    text-shadow: 2px 2px rgba(65,0,0,0.6);
+    color: #eee;
+}
+
+#info-window .container .jumbotron {
+    background-color: rgba(25,200,200,1);
+    border-radius: 30px;
+}

@@ -37,13 +37,13 @@
     <link rel='stylesheet' href='css/index.css' />
     <link rel='stylesheet' href='css/clm.css' />
 </head>
-s
 <body style='overflow:hidden;margin:0;'>
   <div class="nav-container">
     <img class='nav-logo' src="img/logo-alt.png">
     <h1 class="page-title-buffer">|||</h1>
     <h1 class="page-title">face.the.music</h1>
     <h3 class='page-subtitle'>play the tunes you feel</h3>
+    <h3 class='page-subtitle' id='info-button'>click for info</h3>
   </div>
   <div id='program-body' class='container-fluid'>
     <div id='live-webcam' class='col-lg-7 webcam-container'>
@@ -53,9 +53,9 @@ s
       <div id='music-display'></div>
       <div id="results"></div>
       <div class='row'>
-        <div id='container' style='position:absolute; top:0; left:-1102px; width: 200px;' class='hidden'>
-          <video id='videoe1' width='400' height='400' style='display:none;'></video>
-          <canvas id='overlay' width='1070' height='1070'></canvas>
+        <div id='container' style='position:absolute; top:550px; left:50px; width: 200px;' class='hidden'>
+          <video id='videoe1' width='300' height='200'></video>
+          <canvas id='overlay' width='300' height='200'></canvas>
           <canvas id='sketch'></canvas>
           <canvas width="11px" height="781px" id="renderCanvas" style="display:none;"></canvas>
           <div id='stats' class='hidden'>
@@ -77,5 +77,17 @@ s
     <input class="btn" type="button" value="start" onclick="startVideo()" id="startbutton">
   </div>
 </body>
+<div id='info-window' style='display:none;position:fixed;top:0;right:0;left:0;bottom:0;'>
+  <div class='container'>
+    <div class='jumbotron'>
+      <h3 class='page-subtitle'>the 4 emotions are happy, sad, angry, and surprised (not like you need any others)</h3>
+      <h3 class='page-subtitle'>press spacebar to take a picture</h3>
+      <h3 class='page-subtitle'>press i to see cool stats</h3>
+      <h3 class='page-subtitle'></h3>
+      <h3 class='page-subtitle'>credit to google, spotify, and clmtrackr for use of their libraries</h3>
+      <h3 class='page-subtitle' id='info-window-close'>close</h3>
+    </div>
+  </div>
+</div>
 </html>
 
