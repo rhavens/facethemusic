@@ -138,11 +138,25 @@ function getVisionInfo(image) {
         if (oReq.readyState === XMLHttpRequest.DONE && oReq.status === 200) {
             console.log(oReq.responseText);
             var data = JSON.parse(oReq.responseText);
+            var joy,sad,angry,surprise;
 
-            var joy = data.joy/4. + Globals.modif[3]*Globals.Data[3].value;
-            var sad = data.sad/2. + Globals.modif[1]*Globals.Data[1].value;
-            var angry = data.anger/3. + Globals.modif[0]*Globals.Data[0].value;
-            var surprise = data.surprise/2. + Globals.modif[2]*Globals.Data[2].value;
+            if ('error' in data) {
+                joy = 0;
+                sad = 0;
+                angry = 0;
+                surprise = 0;
+            }
+            else {
+                joy = data.joy/4.;
+                sad = data.sad/4.;
+                angry = data.anger/3.;
+                surprise = data.surprise/2.;
+            }
+
+            joy += Globals.modif[3]*Globals.Data[3].value;
+            sad += Globals.modif[1]*Globals.Data[1].value;
+            angry += Globals.modif[0]*Globals.Data[0].value;
+            surprise += Globals.modif[2]*Globals.Data[2].value;
 
             console.log(joy,sad,angry,surprise);
 
