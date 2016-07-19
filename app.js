@@ -372,12 +372,12 @@ app.post('/get_vision_info', function(req, res) {
 //   });
 // });
 
-var httpsServer = https.createServer(credentials, app);
+//var httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(process.env.PORT || 3000, function () {
-      console.log('Listening on port ' + process.env.PORT + '...');
-});
+//httpsServer.listen(process.env.PORT || 3000, function () {
+ //     console.log('Listening on port ' + process.env.PORT + '...');
+//});
   
 
 
-//app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000);
