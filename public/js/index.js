@@ -277,7 +277,7 @@ function sendRequest(tgurl, tries) {
             headers: { 'Authorization': 'Bearer ' + Globals.AccessToken },
             json: true,
             success: function(data) {
-                if ((tracks in data) && (data['tracks'].length)) {
+                if (('tracks' in data) && (data['tracks'].length)) {
                     renderSpotifyMusic(data);
                 }
                 else {
