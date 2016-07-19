@@ -266,7 +266,7 @@ function mapToMusic(emotion) {
         tgurl += i + '=' + options[i] + '&';
     }
 
-    sendRequest(tgurl, tries);
+    sendRequest(tgurl, 0);
 }
 
 function sendRequest(tgurl, tries) {
