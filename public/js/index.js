@@ -1,6 +1,7 @@
 Globals = {};
 Globals.AccessToken = {};
 Globals.Data = {}
+Globals.modif = [3.3,3.,2.5,1.5];
 
 $(document).ready(function() {
     loadAlbums();
@@ -126,10 +127,10 @@ function getVisionInfo(image) {
             console.log(oReq.responseText);
             var data = JSON.parse(oReq.responseText);
 
-            var joy = data.joy/4. + 1.5*Globals.Data[3].value;
-            var sad = data.sad/2. + 3.*Globals.Data[1].value;
-            var angry = data.anger/3. + 3.3*Globals.Data[0].value;
-            var surprise = data.surprise/2. + 2.5*Globals.Data[2].value;
+            var joy = data.joy/4. + Globals.modif[3]*Globals.Data[3].value;
+            var sad = data.sad/2. + Globals.modif[1]*Globals.Data[1].value;
+            var angry = data.anger/3. + Globals.modif[0]*Globals.Data[0].value;
+            var surprise = data.surprise/2. + Globals.modif[2]*Globals.Data[2].value;
 
             console.log(joy,sad,angry,surprise);
 
@@ -305,197 +306,6 @@ function renderSpotifyMusic(data) {
     Globals.Enabled = true;
 }
 
-function initClmTrackr() {
-    return;
-    // setTimeout(function() {
-    //     console.log('test');
-    // var videoInput = document.getElementById('my_camera');
-
-    // var ctracker = new clm.tracker();
-    // ctracker.init(pModel);
-    // ctracker.start(videoInput);
-
-    // function positionLoop() {
-    //     requestAnimationFrame(positionLoop);
-    //     var positions = ctracker.getCurrentPosition();
-    //     positions = //[[x_0, y_0], [x_1,y_1], ... ]
-    //     console.log(positions);
-    //     // do something with the positions ...
-    //   }
-    // positionLoop();
-    // var canvasInput = document.getElementById('canvas');
-    // var cc = canvasInput.getContext('2d');
-    // function drawLoop() {
-    //   requestAnimationFrame(drawLoop);
-    //   cc.clearRect(0, 0, canvasInput.width, canvasInput.height);
-    //   ctracker.draw(canvasInput);
-    // }
-    // drawLoop();
-    // }, 1000);
-
-    var vid = document.getElementById('my_camera').querySelector('video');
-    var overlay = document.getElementById('canvas');
-    var overlayCC = overlay.getContext('2d');
-    
-    /********** check and set up video/webcam **********/
-
-    // function enablestart() {
-    //     var startbutton = document.getElementById('startbutton');
-    //     startbutton.value = "start";
-    //     startbutton.disabled = null;
-    // }
-    
-    /*var insertAltVideo = function(video) {
-        if (supports_video()) {
-            if (supports_ogg_theora_video()) {
-                video.src = "../media/cap12_edit.ogv";
-            } else if (supports_h264_baseline_video()) {
-                video.src = "../media/cap12_edit.mp4";
-            } else {
-                return false;\
-            }
-            //video.play();
-            return true;
-        } else return false;
-    }*/
-
-    // vid.addEventListener('canplay', startVideo, false);
-    
-    /*********** setup of emotion detection *************/
-
-    var ctrack = new clm.tracker({useWebGL : true});
-    ctrack.init(pModel);
-
-
-    Globals.ec = new emotionClassifier();
-    console.log(Globals.ec);
-    Globals.ec.init(emotionModel);
-    var emotionData = Globals.ec.getBlank();    
-
-    function drawLoop() {
-        // requestAnimFrame(drawLoop);
-        overlayCC.clearRect(0, 0, 400, 300);
-        //psrElement.innerHTML = "score :" + ctrack.getScore().toFixed(4);
-        if (ctrack.getCurrentPosition()) {
-            ctrack.draw(overlay);
-        }
-        var cp = ctrack.getCurrentParameters();
-  
-        var er = 0;      
-        var er = Globals.ec.meanPredict(cp);
-        if (er) {
-            updateData(er);
-            for (var i = 0;i < er.length;i++) {
-                if (er[i].value > 0.4) {
-                    // document.getElementById('icon'+(i+1)).style.visibility = 'visible';
-                } else {
-                    // document.getElementById('icon'+(i+1)).style.visibility = 'hidden';
-                }
-            }
-        }
-    }
-    
-
-    
-    /************ d3 code for barchart *****************/
-
-    var margin = {top : 20, right : 20, bottom : 10, left : 40},
-        width = 400 - margin.left - margin.right,
-        height = 100 - margin.top - margin.bottom;
-
-    var barWidth = 30;
-
-    var formatPercent = d3.format(".0%");
-    
-    var x = d3.scale.linear()
-        .domain([0, Globals.ec.getEmotions().length]).range([margin.left, width+margin.left]);
-
-    var y = d3.scale.linear()
-        .domain([0,1]).range([0, height]);
-
-    var svg = d3.select("#emotion_chart").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-    
-    svg.selectAll("rect").
-      data(emotionData).
-      enter().
-      append("svg:rect").
-      attr("x", function(datum, index) { return x(index); }).
-      attr("y", function(datum) { return height - y(datum.value); }).
-      attr("height", function(datum) { return y(datum.value); }).
-      attr("width", barWidth).
-      attr("fill", "#2d578b");
-
-    svg.selectAll("text.labels").
-      data(emotionData).
-      enter().
-      append("svg:text").
-      attr("x", function(datum, index) { return x(index) + barWidth; }).
-      attr("y", function(datum) { return height - y(datum.value); }).
-      attr("dx", -barWidth/2).
-      attr("dy", "1.2em").
-      attr("text-anchor", "middle").
-      text(function(datum) { return datum.value;}).
-      attr("fill", "white").
-      attr("class", "labels");
-    
-    svg.selectAll("text.yAxis").
-      data(emotionData).
-      enter().append("svg:text").
-      attr("x", function(datum, index) { return x(index) + barWidth; }).
-      attr("y", height).
-      attr("dx", -barWidth/2).
-      attr("text-anchor", "middle").
-      attr("style", "font-size: 12").
-      text(function(datum) { return datum.emotion;}).
-      attr("transform", "translate(0, 18)").
-      attr("class", "yAxis");
-
-    function updateData(data) {
-        // update
-        console.log('test');
-        var rects = svg.selectAll("rect")
-            .data(data)
-            .attr("y", function(datum) { return height - y(datum.value); })
-            .attr("height", function(datum) { return y(datum.value); });
-        var texts = svg.selectAll("text.labels")
-            .data(data)
-            .attr("y", function(datum) { return height - y(datum.value); })
-            .text(function(datum) { return datum.value.toFixed(1);});
-
-        // enter 
-        rects.enter().append("svg:rect");
-        texts.enter().append("svg:text");
-
-        // exit
-        rects.exit().remove();
-        texts.exit().remove();
-    }
-
-    /******** stats ********/
-
-    stats = new Stats();
-    stats.domElement.style.position = 'absolute';
-    stats.domElement.style.top = '0px';
-    document.getElementById('results').appendChild( stats.domElement );
-
-    // update stats on every iteration
-    document.addEventListener('clmtrackrIteration', function(event) {
-        stats.update();
-    }, false);
-
-    // var startVideo = Globals.startVideo = function startVideo() {
-        // start video
-        vid.play();
-        // start tracking
-        ctrack.start(vid);
-        // start loop to draw face
-        drawLoop();
-    // }
-}
-
-
 function test() {
 
 
@@ -655,16 +465,25 @@ svg.selectAll("text.yAxis").
   attr("transform", "translate(0, 18)").
   attr("class", "yAxis");
 
+
+
 updateData = function(data) {
+
+    // var joy = data.joy/4. + 1.5*Globals.Data[3].value;
+    // var sad = data.sad/2. + 3.*Globals.Data[1].value;
+    // var angry = data.anger/3. + 3.3*Globals.Data[0].value;
+    // var surprise = data.surprise/2. + 2.5*Globals.Data[2].value;
+
+
     // update
     var rects = svg.selectAll("rect")
         .data(data)
-        .attr("y", function(datum) { return height - y(datum.value); })
-        .attr("height", function(datum) { return y(datum.value); });
+        .attr("y", function(datum, index) { return height - Globals.modif[index]*y(datum.value); })
+        .attr("height", function(datum, index) { return Globals.modif[index]*y(datum.value); });
     var texts = svg.selectAll("text.labels")
         .data(data)
-        .attr("y", function(datum) { return height - y(datum.value); })
-        .text(function(datum) { return datum.value.toFixed(1);});
+        .attr("y", function(datum, index) { return height - Globals.modif[index]*y(datum.value); })
+        .text(function(datum, index) { return (Globals.modif[index]*datum.value).toFixed(1);});
 
     // enter 
     rects.enter().append("svg:rect");
