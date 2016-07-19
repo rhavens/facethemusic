@@ -266,6 +266,10 @@ function mapToMusic(emotion) {
         tgurl += i + '=' + options[i] + '&';
     }
 
+    sendRequest(tgurl, tries);
+}
+
+function sendRequest(tgurl, tries) {
     try {
         $.ajax({
             url: tgurl,
@@ -273,7 +277,15 @@ function mapToMusic(emotion) {
             headers: { 'Authorization': 'Bearer ' + Globals.AccessToken },
             json: true,
             success: function(data) {
-                renderSpotifyMusic(data);
+                if ((tracks in data) && (data['tracks'].length)) {
+                    renderSpotifyMusic(data);
+                }
+                else {
+                    tries += 1;
+                    if (tries < 5) {
+                        sendRequest(tgurl, tries);
+                    }
+                }
             }
         });
     }
@@ -302,6 +314,7 @@ function renderSpotifyMusic(data) {
     }
     catch (e) {
         console.log(e);
+        console.log(data);
     }
     Globals.Enabled = true;
 }
