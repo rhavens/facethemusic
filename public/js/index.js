@@ -24,6 +24,7 @@ function initEventListeners(){
     $(document).keyup(function(e){
         if (e.keyCode == 32) { //space
             if (Globals.Enabled) {
+                e.preventDefault();
                 Globals.Enabled = false;
                 console.log('snapshot');
                 take_snapshot();
