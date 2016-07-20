@@ -21,8 +21,8 @@ $(document).ready(function() {
 });
 
 function initEventListeners(){
-    $(document).keyup(function(e){
-        if (e.keyCode == 32) { //space
+    window.onkeydown = function(e) {
+        if(e.keyCode == 32 && e.target == document.body) {
             if (Globals.Enabled) {
                 e.preventDefault();
                 Globals.Enabled = false;
@@ -30,8 +30,12 @@ function initEventListeners(){
                 take_snapshot();
                 Globals.Data = d3.selectAll('rect').data();
             }
+            e.preventDefault();
+            return false;
         }
-        else if (e.keyCode == 73) {
+    };
+    $(document).keyup(function(e){
+        if (e.keyCode == 73) {
             toggleStats();
         }
     });
