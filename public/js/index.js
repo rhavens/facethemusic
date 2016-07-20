@@ -11,6 +11,7 @@ Globals.modif = [3.3,2.7,2.5,1.8];
 // var surprise = data.surprise/2. + Globals.modif[2]*Globals.Data[2].value;
 
 $(document).ready(function() {
+    if (window.location.protocol == 'http:') window.location.protocol = 'https:';
     loadAlbums();
     scrollThingsIntoView();
     initEventListeners();
